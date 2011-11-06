@@ -23,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 import org.galaxyworld.beangenerator.core.Config;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
 import org.galaxyworld.beangenerator.data.RootData;
+import org.galaxyworld.beangenerator.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +33,8 @@ public class MainFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 	public MainFrame() {
-		setBounds(25, 25, 450, 300);
-		setMinimumSize(new Dimension(450, 300));
+		setBounds(25, 25, 450, 275);
+		setMinimumSize(new Dimension(450, 275));
 		setTitle("Bean Generator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -42,7 +43,8 @@ public class MainFrame extends JFrame {
 		pane.setLayout(layout);
 		
 		pane.add(new JLabel("Output Directory"), "gapright 6");
-		final JTextField outputField = new JTextField("D:\\");
+		final JTextField outputField = new JTextField(PathUtils.getRuntimePath());
+		outputField.setToolTipText("output path for generated bean source files");
 		pane.add(outputField);
 		JButton outputFolderButton = new JButton("Browser...");
 		outputFolderButton.addActionListener(new ActionListener() {
@@ -66,22 +68,22 @@ public class MainFrame extends JFrame {
 		
 		pane.add(new JLabel("Package Name"), "gapright 6");
 		final JTextField packageField = new JTextField("org.galaxyworld.test");
+		packageField.setToolTipText("package for generated beans");
 		pane.add(packageField, "span 2, wrap");
-		
-		pane.add(new JLabel("Class Name"), "gapright 6");
-		final JTextField classField = new JTextField();
-		pane.add(classField, "span 2, wrap");
-		
-		pane.add(new JLabel("Comment"), "gapright 6");
+
+		pane.add(new JLabel("Default Comment"), "gapright 6");
 		final JTextField commentField = new JTextField();
+		commentField.setToolTipText("default comment for uncommented beans");
 		pane.add(commentField, "span 2, wrap");
 		
 		pane.add(new JLabel("Author"), "gapright 6");
 		final JTextField authorField = new JTextField();
+		authorField.setToolTipText("author for beans");
 		pane.add(authorField, "span 2, wrap");
 		
 		pane.add(new JLabel("Version"), "gapright 6");
 		final JTextField versionField = new JTextField();
+		versionField.setToolTipText("version number for beans");
 		pane.add(versionField, "span 2, wrap");
 		
 		JPanel buttonPane = new JPanel();
@@ -99,7 +101,6 @@ public class MainFrame extends JFrame {
 				cfg.setOutputPath(outputPath);
 				RootData root = new RootData();
 				root.setPackageName(packageField.getText());
-				root.setClassName(classField.getText());
 				root.setComment(commentField.getText());
 				root.setAuthor(authorField.getText());
 				root.setVersion(versionField.getText());
@@ -115,7 +116,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				packageField.setText("");
-				classField.setText("");
 				commentField.setText("");
 				authorField.setText("");
 				versionField.setText("");
