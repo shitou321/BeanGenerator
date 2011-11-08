@@ -1,6 +1,7 @@
 package org.galaxyworld.beangenerator.core;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -16,31 +17,45 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JavaBeanGenerator.class);
 	
+	private String outputFilePath;
+	
 	private RootData root;
 	
 	public JavaBeanGenerator(RootData root) {
 		this.root = root;
 	}
 	
-	public void createPackageFolders() {
+	private String createPackageFolders() throws GeneratorException {
 		if(!root.getPackageName().isEmpty()) {
 			String pn = root.getPackageName();
 			try {
-				String outputPath = Config.getInstance().getOutputPath();
-				FileUtils.forceMkdir(new File(outputPath + pn.replace(".", File.separator)));
+				outputFilePath = Config.getInstance().getOutputPath();
+				outputFilePath = outputFilePath + pn.replace(".", File.separator);
+				FileUtils.forceMkdir(new File(outputFilePath));
+				return outputFilePath;
 			} catch (IOException e) {
 				logger.error(e.getMessage());
+				throw new GeneratorException(GeneratorException.FAILED_CREATE_PACKAGE_DIR);
 			}
 		}
+		return null;
+	}
+	
+	private void generate(String fileName) {
+		
 	}
 
 	public void generate() {
 		try {
 			Template temp = cfg.getTemplate("JavaBean.ftl");
-	        Writer out = new OutputStreamWriter(System.out);
-	        temp.process(root.createRootMap(), out);
-	        out.flush();
-	        logger.info("Generates successfully.");
+			String packagePath = createPackageFolders();
+			if(packagePath != null) {
+				String path = packagePath + "\\test.java";
+		        Writer out = new OutputStreamWriter(new FileOutputStream(new File(path)));
+		        temp.process(root.createRootMap(), out);
+		        out.flush();
+		        logger.info("Success! Location: " + path);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

@@ -22,8 +22,9 @@ import net.miginfocom.swing.MigLayout;
 
 import org.galaxyworld.beangenerator.core.Config;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
+import org.galaxyworld.beangenerator.data.CommonData;
+import org.galaxyworld.beangenerator.data.FieldData;
 import org.galaxyworld.beangenerator.data.RootData;
-import org.galaxyworld.beangenerator.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class MainFrame extends JFrame {
 		pane.setLayout(layout);
 		
 		pane.add(new JLabel("Output Directory"), "gapright 6");
-		final JTextField outputField = new JTextField(PathUtils.getRuntimePath());
+		final JTextField outputField = new JTextField(Config.getInstance().getAppPath());
 		outputField.setToolTipText("output path for generated bean source files");
 		pane.add(outputField);
 		JButton outputFolderButton = new JButton("Browser...");
@@ -99,14 +100,20 @@ public class MainFrame extends JFrame {
 					outputPath += File.separator;
 				}
 				cfg.setOutputPath(outputPath);
+				CommonData cd = new CommonData();
+				cd.setDefaultComment(commentField.getText());
+				cd.setAuthor(authorField.getText());
+				cd.setVersion(versionField.getText());
+				cfg.setCommonData(cd);
+				
 				RootData root = new RootData();
 				root.setPackageName(packageField.getText());
-				root.setComment(commentField.getText());
-				root.setAuthor(authorField.getText());
-				root.setVersion(versionField.getText());
+				////
+				root.addField(new FieldData("currency", "String"));
+		        root.addField(new FieldData("amount", "Double", "Amount"));
+				////
 				JavaBeanGenerator gen = new JavaBeanGenerator(root);
-				// gen.generate();
-				gen.createPackageFolders();
+				gen.generate();
 			}
 		});
 		buttonPane.add(genButton);
