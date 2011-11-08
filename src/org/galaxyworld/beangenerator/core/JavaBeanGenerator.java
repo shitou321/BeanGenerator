@@ -5,9 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.galaxyworld.beangenerator.data.RootData;
+import org.galaxyworld.beangenerator.data.CommonData;
+import org.galaxyworld.beangenerator.data.JavaBeanData;
+import org.galaxyworld.beangenerator.util.BeanMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,15 +23,13 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	
 	private String outputFilePath;
 	
-	private RootData root;
-	
-	public JavaBeanGenerator(RootData root) {
-		this.root = root;
+	public JavaBeanGenerator() {
 	}
 	
 	private String createPackageFolders() throws GeneratorException {
-		if(!root.getPackageName().isEmpty()) {
-			String pn = root.getPackageName();
+		CommonData cd = Config.getInstance().getCommonData();
+		if(!cd.getPackageName().isEmpty()) {
+			String pn = cd.getPackageName();
 			try {
 				outputFilePath = Config.getInstance().getOutputPath();
 				outputFilePath = outputFilePath + pn.replace(".", File.separator);
@@ -40,24 +42,39 @@ public class JavaBeanGenerator extends AbstractGenerator {
 		}
 		return null;
 	}
-	
-	private void generate(String fileName) {
-		
-	}
 
-	public void generate() {
+	private void generate(JavaBeanData data) {
 		try {
 			Template temp = cfg.getTemplate("JavaBean.ftl");
 			String packagePath = createPackageFolders();
 			if(packagePath != null) {
-				String path = packagePath + "\\test.java";
+				StringBuilder sb = new StringBuilder();
+				sb.append(packagePath);
+				sb.append(File.separator);
+				sb.append(data.getClassName());
+				sb.append(".java");
+				String path =  sb.toString();
 		        Writer out = new OutputStreamWriter(new FileOutputStream(new File(path)));
-		        temp.process(root.createRootMap(), out);
+		        Map<String, Object> root = BeanMapUtils.toMap(data);
+		        root.putAll(BeanMapUtils.toMap(Config.getInstance().getCommonData()));
+		        temp.process(root, out);
 		        out.flush();
-		        logger.info("Success! Location: " + path);
+		        logger.info("Success! Location: " + path + "; data: " + root);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+		}
+	}
+	
+	public void generateFromDatabase() {
+		DatabaseProcessor dp = new DatabaseProcessor();
+		try {
+			List<JavaBeanData> beans = dp.process();
+			for(JavaBeanData bean : beans) {
+				generate(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

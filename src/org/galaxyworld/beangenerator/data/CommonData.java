@@ -1,7 +1,9 @@
 package org.galaxyworld.beangenerator.data;
 
 public class CommonData {
-
+	
+	private String packageName;
+	
 	private String defaultComment;
 	
 	private String author;
@@ -30,6 +32,14 @@ public class CommonData {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 	
 }

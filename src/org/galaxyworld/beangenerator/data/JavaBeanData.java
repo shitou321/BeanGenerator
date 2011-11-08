@@ -5,33 +5,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class RootData {
+public class JavaBeanData {
 
-	private String packageName = DataConstants.EMPTY;
-	
 	private String className = DataConstants.EMPTY;
 	
 	private String comment = DataConstants.EMPTY;
 	
-	private String author = DataConstants.EMPTY;
-	
-	private String version = DataConstants.EMPTY;
-	
 	private Collection<Map<String, String>> fields;
 	
-	public RootData() {
+	public JavaBeanData() {
 		fields = new HashSet<Map<String, String>>();
-	}
-	
-	public Map<String, Object> createRootMap() {
-		Map<String, Object> root = new HashMap<String, Object>();
-		root.put(DataFields.PACKAGE, packageName);
-		root.put(DataFields.CLASS, className);
-		root.put(DataFields.COMMENT, comment);
-		root.put(DataFields.AUTHOR, author);
-		root.put(DataFields.VERSION, version);
-		root.put(DataFields.FIELDS, fields);
-		return root;
 	}
 	
 	/**
@@ -60,10 +43,6 @@ public class RootData {
 		this.fields = fields;
 	}
 
-	public String getPackageName() {
-		return packageName;
-	}
-
 	public String getClassName() {
 		return className;
 	}
@@ -72,32 +51,12 @@ public class RootData {
 		return comment;
 	}
 
-	public String getAuthor() {
-		return author;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
 	public void setClassName(String className) {
 		this.className = className;
 	}
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
 	}
 	
 }

@@ -23,8 +23,6 @@ import net.miginfocom.swing.MigLayout;
 import org.galaxyworld.beangenerator.core.Config;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
 import org.galaxyworld.beangenerator.data.CommonData;
-import org.galaxyworld.beangenerator.data.FieldData;
-import org.galaxyworld.beangenerator.data.RootData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,16 +102,10 @@ public class MainFrame extends JFrame {
 				cd.setDefaultComment(commentField.getText());
 				cd.setAuthor(authorField.getText());
 				cd.setVersion(versionField.getText());
+				cd.setPackageName(packageField.getText());
 				cfg.setCommonData(cd);
-				
-				RootData root = new RootData();
-				root.setPackageName(packageField.getText());
-				////
-				root.addField(new FieldData("currency", "String"));
-		        root.addField(new FieldData("amount", "Double", "Amount"));
-				////
-				JavaBeanGenerator gen = new JavaBeanGenerator(root);
-				gen.generate();
+				JavaBeanGenerator gen = new JavaBeanGenerator();
+				gen.generateFromDatabase();
 			}
 		});
 		buttonPane.add(genButton);
