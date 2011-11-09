@@ -2,7 +2,6 @@ package org.galaxyworld.beangenerator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -14,8 +13,12 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
@@ -32,11 +35,11 @@ public class MainFrame extends JFrame {
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 	public MainFrame() {
-		setBounds(25, 25, 450, 275);
-		setMinimumSize(new Dimension(450, 275));
+		setBounds(25, 25, 450, 300);
+		setMinimumSize(new Dimension(450, 300));
 		setTitle("Bean Generator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		JPanel pane = new JPanel();
 		MigLayout layout = new MigLayout("fillx", "[right]rel[grow,fill]rel[min]", "[]rel[]");
 		pane.setLayout(layout);
@@ -126,10 +129,17 @@ public class MainFrame extends JFrame {
 		pane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		getContentPane().add(pane, BorderLayout.CENTER);
+		
+		JMenuBar mb = new JMenuBar();
+		JMenu mFile = new JMenu("File");
+		JMenuItem miExit = new JMenuItem("Exit");
+		mFile.add(miExit);
+		mb.add(mFile);
+		getContentPane().add(mb, BorderLayout.NORTH);
 	}
 	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			
 	        @Override
 	        public void run() {
