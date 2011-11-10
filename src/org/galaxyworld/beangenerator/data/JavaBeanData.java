@@ -7,9 +7,11 @@ import java.util.Map;
 
 public class JavaBeanData {
 
-	private String className = DataConstants.EMPTY;
+	private String className;
 	
-	private String comment = DataConstants.EMPTY;
+	private String comment;
+	
+	private String tableName;
 	
 	private Collection<Map<String, String>> fields;
 	
@@ -57,6 +59,14 @@ public class JavaBeanData {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 	
 }

@@ -58,6 +58,7 @@ public class DatabaseProcessor {
 	private JavaBeanData getTableStructure(Connection conn, String name) throws Exception {
 		JavaBeanData bean = new JavaBeanData();
 		bean.setComment("Table name: " + name + ".");
+		bean.setTableName(name);
 		bean.setClassName(createJavaName(name));
 		Statement statement = conn.createStatement();
 		StringBuilder sb = new StringBuilder();
@@ -92,7 +93,7 @@ public class DatabaseProcessor {
 		return javaNameBuilder.toString();
 	}
 	
-	public List<JavaBeanData> process() throws Exception {
+	public List<JavaBeanData> getJavaBeanData() throws Exception {
 		Connection conn = getConnection();
 		List<JavaBeanData> beans = new ArrayList<JavaBeanData>();
 		List<String> tables = getTables(conn);

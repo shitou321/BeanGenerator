@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -43,7 +42,7 @@ public class JavaBeanGenerator extends AbstractGenerator {
 		return null;
 	}
 
-	private void generate(JavaBeanData data) {
+	public void generate(JavaBeanData data) {
 		try {
 			Template temp = cfg.getTemplate("JavaBean.ftl");
 			String packagePath = createPackageFolders();
@@ -63,18 +62,6 @@ public class JavaBeanGenerator extends AbstractGenerator {
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-		}
-	}
-	
-	public void generateFromDatabase() {
-		DatabaseProcessor dp = new DatabaseProcessor();
-		try {
-			List<JavaBeanData> beans = dp.process();
-			for(JavaBeanData bean : beans) {
-				generate(bean);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	

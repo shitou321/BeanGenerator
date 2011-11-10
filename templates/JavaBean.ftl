@@ -1,31 +1,31 @@
 package ${packageName};
 
 /**
- * ${comment}
+ * ${comment!""}
  *
- * @author ${author}
- * @version ${version}
+ * @author ${author!""}
+ * @version ${version!""}
  */
-public class ${className?cap_first} {
+public class ${className} {
 	
-	public ${className?cap_first}() {
+	public ${className}() {
 	
 	}
 	
 	<#list fields as field>
 	/**
-	 * ${field.comment}
+	 * ${field.comment!""}
 	 */
-	private ${field.type} ${field.name};
+	private ${field.type} ${field.name?uncap_first};
 	
 	</#list>
 	<#list fields as field>
-	public void set${field.name?cap_first}(${field.type} ${field.name}) {
-		this.${field.name} = ${field.name};
+	public void set${field.name}(${field.type} ${field.name?uncap_first}) {
+		this.${field.name?uncap_first} = ${field.name?uncap_first};
 	}
 	
 	public ${field.type} get${field.name?cap_first}() {
-		return this.${field.name};
+		return this.${field.name?uncap_first};
 	}
 	
 	</#list>

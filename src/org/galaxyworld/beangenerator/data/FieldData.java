@@ -2,11 +2,11 @@ package org.galaxyworld.beangenerator.data;
 
 public class FieldData {
 
-	private String name = DataConstants.EMPTY;
+	private String name;
 	
-	private String type = DataConstants.EMPTY;
+	private String type;
 	
-	private String comment = DataConstants.EMPTY;
+	private String comment;
 	
 	public FieldData(String name, String type) {
 		this.name = name;
