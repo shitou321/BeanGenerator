@@ -19,33 +19,37 @@
 
 package org.galaxyworld.beangenerator.core;
 
-import java.io.File;
-import java.io.IOException;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-
 /**
- * The base generator. Detail generators should extends this class.
+ * Application exception.
  * 
  * @author devbean
  * @version 0.0.1
  */
-public abstract class AbstractGenerator {
+@SuppressWarnings("serial")
+public class AppException extends Exception {
+
+	/**
+	 * Failed create database connection.
+	 */
+	public static final String FAILED_CREATE_CONNECTION = "Failed to create database connection.";
 	
 	/**
-	 * Configuration for <a href="http://freemarker.sourceforge.net/">FreeMarker</a>.
+	 * Failed create package path.
 	 */
-	protected Configuration cfg;
+	public static final String FAILED_CREATE_PACKAGE_DIR = "Failed to create package directory structure.";
+	
+	private String message;
+	
+	public AppException(String message) {
+		this.message = message;
+	}
 
-	public AbstractGenerator() {
-		cfg = new Configuration();
-        try {
-			cfg.setDirectoryForTemplateLoading(new File("templates"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

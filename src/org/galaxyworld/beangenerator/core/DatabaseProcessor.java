@@ -1,3 +1,22 @@
+/*
+ * BeanGenerator
+ * 
+ * Copyright (C) 2011 galaxyworld.org
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.galaxyworld.beangenerator.core;
 
 import java.io.File;
@@ -15,38 +34,26 @@ import java.util.Properties;
 import org.galaxyworld.beangenerator.data.FieldData;
 import org.galaxyworld.beangenerator.data.JavaBeanData;
 import org.galaxyworld.beangenerator.util.Constants;
-import org.galaxyworld.beangenerator.util.JarLoader;
-import org.galaxyworld.beangenerator.util.PropertiesUtils;
+import org.galaxyworld.beangenerator.util.ResourceUtils;
 
+/**
+ * Supports database operations.
+ * 
+ * @author devbean
+ * @version 0.0.1
+ */
 public class DatabaseProcessor {
-
-	private Connection getConnection() throws DatabaseException {
-		Connection conn = null;
-		Properties props = PropertiesUtils.read(Config.getInstance().getConfigFilePath());
-		try {
-			Driver driver = JarLoader.loadJarFile(new File(props.getProperty(Constants.PROP_JAR_PATH)), props.getProperty(Constants.PROP_DRIVER));
-			conn = driver.connect(props.getProperty(Constants.PROP_URL), props);
-		} catch (Exception e) {
-			e.printStackTrace();
-			DatabaseException ex = new DatabaseException(DatabaseException.FAILED_CREATE_CONNECTION);
-			ex.fillInStackTrace();
-			throw ex;
-		}
-		return conn;
-	}
 	
-	private void closeConnection(Connection conn) {
-		if(conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	private static Connection conn;
 	
-	private List<String> getTables(Connection conn) throws Exception {
-	    DatabaseMetaData meta = conn.getMetaData();
+	/**
+	 * Gets tables list from database.
+	 * 
+	 * @return table list
+	 * @throws Exception if any problem
+	 */
+	public List<String> getTables() throws Exception {
+	    DatabaseMetaData meta = getConnection().getMetaData();
 	    ResultSet rs = meta.getTables(null, null, null, new String[] { "TABLE" });
 	    List<String> tables = new ArrayList<String>();
 	    while (rs.next()) {
@@ -55,7 +62,14 @@ public class DatabaseProcessor {
 	    return tables;
 	}
 	
-	private JavaBeanData getTableStructure(Connection conn, String name) throws Exception {
+	/**
+	 * 
+	 * 
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	public JavaBeanData getTableMetaData(String name) throws Exception {
 		JavaBeanData bean = new JavaBeanData();
 		bean.setComment("Table name: " + name + ".");
 		bean.setTableName(name);
@@ -84,6 +98,42 @@ public class DatabaseProcessor {
 		return bean;
 	}
 	
+	/**
+	 * Closes connection.
+	 */
+	public void closeConnection() {
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Creates database connection. JDBC library, driver class name and database URL should be defined
+	 * in application configuration file or there will be an exception.
+	 * 
+	 * @return database connection
+	 * @throws AppException if creates fails
+	 */
+	private Connection getConnection() throws AppException {
+		if(conn == null) {
+			Properties props = ResourceUtils.read(Config.getInstance().getConfigFilePath());
+			try {
+				Driver driver = ResourceUtils.loadJarFile(new File(props.getProperty(Constants.PROP_JAR_PATH)),
+						props.getProperty(Constants.PROP_DRIVER));
+				conn = driver.connect(props.getProperty(Constants.PROP_URL), props);
+			} catch (Exception e) {
+				AppException ex = new AppException(AppException.FAILED_CREATE_CONNECTION);
+				ex.fillInStackTrace();
+				throw ex;
+			}
+		}
+		return conn;
+	}
+	
 	private String createJavaName(String dbName) {
 		String[] subs = dbName.split("_");
 		StringBuilder javaNameBuilder = new StringBuilder();
@@ -93,14 +143,4 @@ public class DatabaseProcessor {
 		return javaNameBuilder.toString();
 	}
 	
-	public List<JavaBeanData> getJavaBeanData() throws Exception {
-		Connection conn = getConnection();
-		List<JavaBeanData> beans = new ArrayList<JavaBeanData>();
-		List<String> tables = getTables(conn);
-		for(String tableName : tables) {
-			beans.add(getTableStructure(conn, tableName));
-		}
-		closeConnection(conn);
-		return beans;
-	}
 }

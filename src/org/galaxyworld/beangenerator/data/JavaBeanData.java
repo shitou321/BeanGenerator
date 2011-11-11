@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.galaxyworld.beangenerator.util.Constants;
+
 public class JavaBeanData {
 
 	private String className;
@@ -31,9 +33,9 @@ public class JavaBeanData {
 	 */
 	public void addField(FieldData field) {
 		Map<String, String> fieldMap = new HashMap<String, String>();
-		fieldMap.put(DataFields.NAME, field.getName());
-		fieldMap.put(DataFields.TYPE, field.getType());
-		fieldMap.put(DataFields.COMMENT, field.getComment());
+		fieldMap.put(Constants.DATA_KEY_NAME, field.getName());
+		fieldMap.put(Constants.DATA_KEY_TYPE, field.getType());
+		fieldMap.put(Constants.DATA_KEY_COMMENT, field.getComment());
 		fields.add(fieldMap);
 	}
 

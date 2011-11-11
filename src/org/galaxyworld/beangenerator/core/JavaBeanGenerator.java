@@ -25,21 +25,18 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	public JavaBeanGenerator() {
 	}
 	
-	private String createPackageFolders() throws GeneratorException {
+	private String createPackageFolders() throws AppException {
 		CommonData cd = Config.getInstance().getCommonData();
-		if(!cd.getPackageName().isEmpty()) {
-			String pn = cd.getPackageName();
-			try {
-				outputFilePath = Config.getInstance().getOutputPath();
-				outputFilePath = outputFilePath + pn.replace(".", File.separator);
-				FileUtils.forceMkdir(new File(outputFilePath));
-				return outputFilePath;
-			} catch (IOException e) {
-				logger.error(e.getMessage());
-				throw new GeneratorException(GeneratorException.FAILED_CREATE_PACKAGE_DIR);
-			}
+		String pn = cd.getPackageName();
+		try {
+			outputFilePath = Config.getInstance().getOutputPath();
+			outputFilePath = outputFilePath + pn.replace(".", File.separator);
+			FileUtils.forceMkdir(new File(outputFilePath));
+			return outputFilePath;
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			throw new AppException(AppException.FAILED_CREATE_PACKAGE_DIR);
 		}
-		return null;
 	}
 
 	public void generate(JavaBeanData data) {

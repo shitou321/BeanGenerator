@@ -1,10 +1,12 @@
+<#if packageName != "">
 package ${packageName};
+</#if>
 
 /**
- * ${comment!""}
+ * ${comment!}
  *
- * @author ${author!""}
- * @version ${version!""}
+ * @author ${author!}
+ * @version ${version!}
  */
 public class ${className} {
 	
@@ -14,7 +16,7 @@ public class ${className} {
 	
 	<#list fields as field>
 	/**
-	 * ${field.comment!""}
+	 * ${field.comment!}
 	 */
 	private ${field.type} ${field.name?uncap_first};
 	
