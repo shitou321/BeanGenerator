@@ -63,11 +63,11 @@ public class DatabaseProcessor {
 	}
 	
 	/**
+	 * Gets table's meta-data.
 	 * 
-	 * 
-	 * @param name
-	 * @return
-	 * @throws Exception
+	 * @param name table name
+	 * @return data needs to generate
+	 * @throws Exception if any problem
 	 */
 	public JavaBeanData getTableMetaData(String name) throws Exception {
 		JavaBeanData bean = new JavaBeanData();
@@ -134,6 +134,13 @@ public class DatabaseProcessor {
 		return conn;
 	}
 	
+	/**
+	 * Supposes the name in databases is split with '_'. This method try to convert this kind
+	 * of name into Java-style.
+	 * 
+	 * @param dbName name of database-style
+	 * @return name in Java-style
+	 */
 	private String createJavaName(String dbName) {
 		String[] subs = dbName.split("_");
 		StringBuilder javaNameBuilder = new StringBuilder();

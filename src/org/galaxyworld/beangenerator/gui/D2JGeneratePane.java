@@ -1,3 +1,22 @@
+/*
+ * BeanGenerator
+ * 
+ * Copyright (C) 2011 galaxyworld.org
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.galaxyworld.beangenerator.gui;
 
 import java.awt.HeadlessException;
@@ -24,19 +43,31 @@ import org.galaxyworld.beangenerator.data.JavaBeanData;
 
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * Database tables to JavaBean generator panel.
+ * 
+ * @author devbean
+ * @version 0.0.1
+ */
 @SuppressWarnings("serial")
 public class D2JGeneratePane extends JPanel implements GenerateAction {
 	
+	// output path
 	private final JTextField outputField = new JTextField(Config.getInstance().getAppPath());
 	
+	// package
 	private final JTextField packageField = new JTextField();
 	
+	// comment
 	private final JTextField commentField = new JTextField();
 	
+	// author
 	private final JTextField authorField = new JTextField();
 	
+	// version
 	private final JTextField versionField = new JTextField();
 	
+	// application log output
 	private final JTextArea outputArea = new JTextArea(20, 10);
 	
 	public D2JGeneratePane() {

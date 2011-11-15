@@ -19,54 +19,27 @@
 
 package org.galaxyworld.beangenerator.gui;
 
-import java.awt.Insets;
-
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
- * Button on button panel.
+ * JavaBean to ActionScript3 code generator panel.
  * 
  * @author devbean
  * @version 0.0.1
  */
 @SuppressWarnings("serial")
-public class ToolBarButton extends JButton {
-	
-	public ToolBarButton(String text, Icon icon) {
-		super(text, icon);
-		initButton();
+public class J2AGeneratePane extends JPanel implements GenerateAction {
+
+	@Override
+	public void generate() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public ToolBarButton() {
-		super();
-		initButton();
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public ToolBarButton(Action action) {
-		super(action);
-		initButton();
-	}
-
-	private void initButton() {
-		setRolloverEnabled(true);
-		setRequestFocusEnabled(false);
-		setMargin(new Insets(2, 4, 2, 4));
-		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-	}
-
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
-
-	/**
-	 * @see javax.swing.JButton#updateUI()
-	 */
-	public void updateUI() {
-		super.updateUI();
-
-		setRolloverEnabled(true);
-		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-	}
 }

@@ -3,7 +3,7 @@
 BeanGenerator is a tool used for developers which can generate POJO code from databases.
 
 ## Features
-- Generates Java bean source code for database tables.
+- Generates Java bean source code for database tables(*).
 
 # Requirement
 
@@ -19,3 +19,5 @@ BeanGenerator has a very friendly user interface. You could easily open the main
 # License
 
 [GPLv3](http://www.gnu.org/licenses/gpl-3.0.html)
+
+* Suppose names in databases are split with '_'.
