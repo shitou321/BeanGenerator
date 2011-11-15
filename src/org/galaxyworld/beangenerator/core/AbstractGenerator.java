@@ -21,6 +21,10 @@ package org.galaxyworld.beangenerator.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -30,6 +34,7 @@ import freemarker.template.DefaultObjectWrapper;
  * 
  * @author devbean
  * @version 0.0.1
+ * @version 0.0.2 Add event listeners.
  */
 public abstract class AbstractGenerator {
 	
@@ -37,15 +42,59 @@ public abstract class AbstractGenerator {
 	 * Configuration for <a href="http://freemarker.sourceforge.net/">FreeMarker</a>.
 	 */
 	protected Configuration cfg;
+	
+	private List<GeneratorProcessListener> processListeners = new ArrayList<GeneratorProcessListener>();
 
 	public AbstractGenerator() {
 		cfg = new Configuration();
-        try {
+		try {
 			cfg.setDirectoryForTemplateLoading(new File("templates"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         cfg.setObjectWrapper(new DefaultObjectWrapper());
+	}
+	
+	/**
+	 * Generates code. This method might be called by GUI button action.
+	 * Process event information should be added in this method in order to
+	 * notify GUI update.
+	 * 
+	 * @throws Exception if any problem
+	 */
+	public abstract void generate() throws Exception;
+	
+	/**
+	 * Adds a process listener.
+	 * 
+	 * @param l listener to add
+	 */
+	public void addGeneratorProcessListener(GeneratorProcessListener l) {
+	    if(!processListeners.contains(l)) {
+	    	processListeners.add(l);
+	    }
+	}
+	
+	/**
+	 * Removes a process listener.
+	 * 
+	 * @param l listener to remove
+	 */
+	public void removeGeneratorProcessListener(GeneratorProcessListener l) {
+	    if(processListeners.contains(l)) {
+	    	processListeners.remove(l);
+	    }
+	}
+	
+	/**
+	 * Fires process event.
+	 * 
+	 * @param e event to pass
+	 */
+	public void fireGeneratorProcessEvent(GeneratorProcessEvent e) {
+	    for(GeneratorProcessListener l : processListeners) {
+	        l.generatorProcess(e);
+	    }
 	}
 	
 }

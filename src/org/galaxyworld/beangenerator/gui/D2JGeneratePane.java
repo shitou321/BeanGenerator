@@ -35,11 +35,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.galaxyworld.beangenerator.core.AbstractGenerator;
 import org.galaxyworld.beangenerator.core.Config;
-import org.galaxyworld.beangenerator.core.DatabaseProcessor;
+import org.galaxyworld.beangenerator.core.GeneratorProcessListener;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
 import org.galaxyworld.beangenerator.data.CommonData;
-import org.galaxyworld.beangenerator.data.JavaBeanData;
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -148,26 +149,13 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		outputArea.setText("");
 	}
 	
-	class DatabaseWorker extends SwingWorker<Void, String> {
+	private class DatabaseWorker extends SwingWorker<Void, String> implements GeneratorProcessListener {
 
 		@Override
 		protected Void doInBackground() throws Exception {
-			publish("Start parsing database tables...\n");
-			DatabaseProcessor dp = new DatabaseProcessor();
-			List<String> tables = dp.getTables();
-			publish("Finish parsed database.\n");
-			JavaBeanGenerator gen = new JavaBeanGenerator();
-			for(String tableName : tables) {
-				JavaBeanData bean = dp.getTableMetaData(tableName);
-				gen.generate(bean);
-				StringBuilder sb = new StringBuilder();
-				sb.append("Finish generate table ");
-				sb.append(bean.getComment());
-				sb.append(".\n");
-				publish(sb.toString());
-			}
-			dp.closeConnection();
-			publish("Done.");
+			AbstractGenerator gen = new JavaBeanGenerator();
+			gen.addGeneratorProcessListener(this);
+			gen.generate();
 			return null;
 		}
 		
@@ -180,6 +168,11 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 				String oldText = outputArea.getText();
 				outputArea.setText(oldText + output);
 			}
+		}
+
+		@Override
+		public void generatorProcess(GeneratorProcessEvent e) {
+			publish(e.getMessage());
 		}
 
 	}

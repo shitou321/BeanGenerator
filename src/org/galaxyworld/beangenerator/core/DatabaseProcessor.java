@@ -44,16 +44,15 @@ import org.galaxyworld.beangenerator.util.ResourceUtils;
  */
 public class DatabaseProcessor {
 	
-	private static Connection conn;
-	
 	/**
 	 * Gets tables list from database.
 	 * 
+	 * @param conn database connection
 	 * @return table list
 	 * @throws Exception if any problem
 	 */
-	public List<String> getTables() throws Exception {
-	    DatabaseMetaData meta = getConnection().getMetaData();
+	public List<String> getTables(Connection conn) throws Exception {
+	    DatabaseMetaData meta = conn.getMetaData();
 	    ResultSet rs = meta.getTables(null, null, null, new String[] { "TABLE" });
 	    List<String> tables = new ArrayList<String>();
 	    while (rs.next()) {
@@ -65,11 +64,12 @@ public class DatabaseProcessor {
 	/**
 	 * Gets table's meta-data.
 	 * 
+	 * @param conn database connection
 	 * @param name table name
 	 * @return data needs to generate
 	 * @throws Exception if any problem
 	 */
-	public JavaBeanData getTableMetaData(String name) throws Exception {
+	public JavaBeanData getTableMetaData(Connection conn, String name) throws Exception {
 		JavaBeanData bean = new JavaBeanData();
 		bean.setComment("Table name: " + name + ".");
 		bean.setTableName(name);
@@ -100,8 +100,10 @@ public class DatabaseProcessor {
 	
 	/**
 	 * Closes connection.
+	 * 
+	 * @param conn connection to close
 	 */
-	public void closeConnection() {
+	public void closeConnection(Connection conn) {
 		if(conn != null) {
 			try {
 				conn.close();
@@ -118,20 +120,17 @@ public class DatabaseProcessor {
 	 * @return database connection
 	 * @throws AppException if creates fails
 	 */
-	private Connection getConnection() throws AppException {
-		if(conn == null) {
-			Properties props = ResourceUtils.read(Config.getInstance().getConfigFilePath());
-			try {
-				Driver driver = ResourceUtils.loadJarFile(new File(props.getProperty(Constants.PROP_JAR_PATH)),
-						props.getProperty(Constants.PROP_DRIVER));
-				conn = driver.connect(props.getProperty(Constants.PROP_URL), props);
-			} catch (Exception e) {
-				AppException ex = new AppException(AppException.FAILED_CREATE_CONNECTION);
-				ex.fillInStackTrace();
-				throw ex;
-			}
+	public Connection getConnection() throws AppException {
+		Properties props = ResourceUtils.read(Config.getInstance().getConfigFilePath());
+		try {
+			Driver driver = ResourceUtils.loadJarFile(new File(props.getProperty(Constants.PROP_JAR_PATH)),
+					props.getProperty(Constants.PROP_DRIVER));
+			return driver.connect(props.getProperty(Constants.PROP_URL), props);
+		} catch (Exception e) {
+			AppException ex = new AppException(AppException.FAILED_CREATE_CONNECTION);
+			ex.fillInStackTrace();
+			throw ex;
 		}
-		return conn;
 	}
 	
 	/**

@@ -24,11 +24,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.sql.Connection;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.galaxyworld.beangenerator.data.CommonData;
 import org.galaxyworld.beangenerator.data.JavaBeanData;
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent.Phase;
 import org.galaxyworld.beangenerator.util.BeanMapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +77,7 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	 * 
 	 * @param data JavaBean data
 	 */
-	public void generate(JavaBeanData data) {
+	private void generateBean(JavaBeanData data) {
 		try {
 			Template temp = cfg.getTemplate("JavaBean.ftl");
 			String packagePath = createPackageFolders();
@@ -94,6 +98,30 @@ public class JavaBeanGenerator extends AbstractGenerator {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+	}
+	
+	@Override
+	public void generate() throws Exception {
+		DatabaseProcessor dp = new DatabaseProcessor();
+		fireGeneratorProcessEvent(new GeneratorProcessEvent(Phase.Starting,
+				"Start parsing database tables...\n", this));
+		Connection conn = dp.getConnection();
+		List<String> tables = dp.getTables(conn);
+		fireGeneratorProcessEvent(new GeneratorProcessEvent(Phase.Started,
+				"Finish parsed database.\n", this));
+		for(String tableName : tables) {
+			JavaBeanData bean = dp.getTableMetaData(conn, tableName);
+			generateBean(bean);
+			StringBuilder sb = new StringBuilder();
+			sb.append("Finish generate table ");
+			sb.append(bean.getComment());
+			sb.append(".\n");
+			fireGeneratorProcessEvent(new GeneratorProcessEvent(Phase.ItemFinished,
+					sb.toString(), this));
+		}
+		dp.closeConnection(conn);
+		fireGeneratorProcessEvent(new GeneratorProcessEvent(Phase.Finished,
+				"Done.", this));
 	}
 	
 }

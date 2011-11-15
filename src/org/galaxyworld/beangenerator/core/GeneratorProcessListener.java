@@ -19,38 +19,23 @@
 
 package org.galaxyworld.beangenerator.core;
 
+import java.util.EventListener;
+
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+
 /**
- * Application exception.
+ * Generator process listener.
  * 
  * @author devbean
  * @version 0.0.1
  */
-public class AppException extends Exception {
-
-	private static final long serialVersionUID = 6156483906590946405L;
+public interface GeneratorProcessListener extends EventListener {
 
 	/**
-	 * Failed create database connection.
+	 * Generator process.
+	 * 
+	 * @param e event
 	 */
-	public static final String FAILED_CREATE_CONNECTION = "Failed to create database connection.";
-	
-	/**
-	 * Failed create package path.
-	 */
-	public static final String FAILED_CREATE_PACKAGE_DIR = "Failed to create package directory structure.";
-	
-	private String message;
-	
-	public AppException(String message) {
-		this.message = message;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	public void generatorProcess(GeneratorProcessEvent e);
 	
 }
