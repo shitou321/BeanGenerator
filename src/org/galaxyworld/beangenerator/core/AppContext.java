@@ -30,8 +30,9 @@ import org.galaxyworld.beangenerator.util.ResourceUtils;
  * 
  * @author devbean
  * @version 0.0.1
+ * @version 0.0.2 Rename from <code>Config</code> to <code>AppContext</code>
  */
-public class Config {
+public class AppContext {
 	
 	private String outputPath;
 	
@@ -43,20 +44,16 @@ public class Config {
 	
 	private CommonData commonData;
 	
-	private static class ConfigInstance {
-		private static final Config instance = new Config();
-	}
-	
 	/**
 	 * Gets the only instance.
 	 * 
 	 * @return configuration instance
 	 */
-	public static Config getInstance() {
-	    return ConfigInstance.instance;
+	public static AppContext getInstance() {
+	    return AppContextInstance.instance;
 	}
 	
-	private Config() {
+	private AppContext() {
 		appPath = ResourceUtils.getRuntimePath();
 		StringBuilder sb = new StringBuilder(appPath);
 		sb.append(File.separator);
@@ -131,4 +128,7 @@ public class Config {
 		this.commonData = commonData;
 	}
 
+	private static class AppContextInstance {
+		private static final AppContext instance = new AppContext();
+	}
 }

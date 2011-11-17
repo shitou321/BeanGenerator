@@ -121,7 +121,7 @@ public class DatabaseProcessor {
 	 * @throws AppException if creates fails
 	 */
 	public Connection getConnection() throws AppException {
-		Properties props = ResourceUtils.read(Config.getInstance().getConfigFilePath());
+		Properties props = ResourceUtils.read(AppContext.getInstance().getConfigFilePath());
 		try {
 			Driver driver = ResourceUtils.loadJarFile(new File(props.getProperty(Constants.PROP_JAR_PATH)),
 					props.getProperty(Constants.PROP_DRIVER));

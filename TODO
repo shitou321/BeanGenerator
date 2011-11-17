@@ -1,0 +1,6 @@
+v1.0.0
+* Database tables to Java bean code;
+* Java bean code or class files to ActionScript POJO class.
+
+v2.0.0
+* Plugin feature, allow third party code generators.

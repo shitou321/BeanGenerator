@@ -36,7 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 import org.galaxyworld.beangenerator.core.AbstractGenerator;
-import org.galaxyworld.beangenerator.core.Config;
+import org.galaxyworld.beangenerator.core.AppContext;
 import org.galaxyworld.beangenerator.core.GeneratorProcessListener;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
 import org.galaxyworld.beangenerator.data.CommonData;
@@ -54,7 +54,7 @@ import net.miginfocom.swing.MigLayout;
 public class D2JGeneratePane extends JPanel implements GenerateAction {
 	
 	// output path
-	private final JTextField outputField = new JTextField(Config.getInstance().getAppPath());
+	private final JTextField outputField = new JTextField(AppContext.getInstance().getAppPath());
 	
 	// package
 	private final JTextField packageField = new JTextField();
@@ -124,7 +124,7 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 	
 	@Override
 	public void generate() {
-		Config cfg = Config.getInstance();
+		AppContext cfg = AppContext.getInstance();
 		String outputPath = outputField.getText();
 		if(outputPath.lastIndexOf(File.separator) != outputPath.length()) {
 			outputPath += File.separator;

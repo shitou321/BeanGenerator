@@ -59,10 +59,10 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	 * @throws AppException if any problem
 	 */
 	private String createPackageFolders() throws AppException {
-		CommonData cd = Config.getInstance().getCommonData();
+		CommonData cd = AppContext.getInstance().getCommonData();
 		String pn = cd.getPackageName();
 		try {
-			String outputFilePath = Config.getInstance().getOutputPath();
+			String outputFilePath = AppContext.getInstance().getOutputPath();
 			outputFilePath = outputFilePath + pn.replace(".", File.separator);
 			FileUtils.forceMkdir(new File(outputFilePath));
 			return outputFilePath;
@@ -90,7 +90,7 @@ public class JavaBeanGenerator extends AbstractGenerator {
 				String path =  sb.toString();
 		        Writer out = new OutputStreamWriter(new FileOutputStream(new File(path)));
 		        Map<String, Object> root = BeanMapUtils.toMap(data);
-		        root.putAll(BeanMapUtils.toMap(Config.getInstance().getCommonData()));
+		        root.putAll(BeanMapUtils.toMap(AppContext.getInstance().getCommonData()));
 		        temp.process(root, out);
 		        out.flush();
 		        logger.info("Success! Location: " + path + "; data: " + root);
