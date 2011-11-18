@@ -27,6 +27,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.galaxyworld.beangenerator.util.ResourceUtils;
+
 /**
  * Control button pane at the bottom of main frame.
  * 
@@ -44,7 +46,7 @@ public class ControlPane extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		
 		// generate
-		JButton genButton = new JButton("Generate");
+		JButton genButton = new JButton(ResourceUtils.tr("mainwindow.controlpane.generate"));
 		genButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -56,7 +58,7 @@ public class ControlPane extends JPanel {
 		add(genButton);
 		
 		// reset
-		JButton resetButton = new JButton("Reset");
+		JButton resetButton = new JButton(ResourceUtils.tr("mainwindow.controlpane.reset"));
 		resetButton.addActionListener(new ActionListener() {
 
 			@Override

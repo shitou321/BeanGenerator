@@ -23,7 +23,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -33,14 +32,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 
-import org.galaxyworld.beangenerator.core.AbstractGenerator;
 import org.galaxyworld.beangenerator.core.AppContext;
-import org.galaxyworld.beangenerator.core.GeneratorProcessListener;
+import org.galaxyworld.beangenerator.core.GenerateTaskWorker;
 import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
 import org.galaxyworld.beangenerator.data.CommonData;
-import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+import org.galaxyworld.beangenerator.util.ResourceUtils;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -75,19 +72,19 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		MigLayout layout = new MigLayout("fillx, wrap", "[align right]rel[grow, fill]rel[pref]", "[]rel[]rel[]rel[]rel[]rel[grow, fill]");
 		setLayout(layout);
 		
-		add(new JLabel("Output Directory"), "gapright 6");
-		outputField.setToolTipText("output path for generated bean source files");
+		add(new JLabel(ResourceUtils.tr("d2j.outputdir.label")), "gapright 6");
+		outputField.setToolTipText(ResourceUtils.tr("d2j.outputdir.tip"));
 		add(outputField);
-		JButton outputFolderButton = new JButton("Browser...");
+		JButton outputFolderButton = new JButton(ResourceUtils.tr("d2j.outputdir.browser"));
 		outputFolderButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = new JFileChooser(outputField.getText());
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int flag = -1;
 				try{
-					flag=fc.showOpenDialog(null);
+					flag = fc.showOpenDialog(null);
 				} catch(HeadlessException ex) {
 					ex.printStackTrace();
 				}
@@ -98,23 +95,23 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		});
 		add(outputFolderButton);
 		
-		add(new JLabel("Package Name"), "gapright 6");
-		packageField.setToolTipText("package for generated beans");
+		add(new JLabel(ResourceUtils.tr("d2j.package.label")), "gapright 6");
+		packageField.setToolTipText(ResourceUtils.tr("d2j.package.tip"));
 		add(packageField, "span 2");
 
-		add(new JLabel("Default Comment"), "gapright 6");
-		commentField.setToolTipText("default comment for uncommented beans");
+		add(new JLabel(ResourceUtils.tr("d2j.defaultcomment.label")), "gapright 6");
+		commentField.setToolTipText(ResourceUtils.tr("d2j.defaultcomment.tip"));
 		add(commentField, "span 2");
 		
-		add(new JLabel("Author"), "gapright 6");
-		authorField.setToolTipText("author for beans");
+		add(new JLabel(ResourceUtils.tr("d2j.author.label")), "gapright 6");
+		authorField.setToolTipText(ResourceUtils.tr("d2j.author.tip"));
 		add(authorField, "span 2");
 		
-		add(new JLabel("Version"), "gapright 6");
-		versionField.setToolTipText("version number for beans");
+		add(new JLabel(ResourceUtils.tr("d2j.version.label")), "gapright 6");
+		versionField.setToolTipText(ResourceUtils.tr("d2j.version.tip"));
 		add(versionField, "span 2");
 		
-		add(new JLabel("Output"), "gapright 6");
+		add(new JLabel(ResourceUtils.tr("d2j.logs.label")), "gapright 6");
 		final JScrollPane outputScrollPane = new JScrollPane(outputArea);
 		outputArea.setEditable(false);
 		add(outputScrollPane, "span 2");
@@ -124,20 +121,21 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 	
 	@Override
 	public void generate() {
-		AppContext cfg = AppContext.getInstance();
+		AppContext appCtx = AppContext.getInstance();
 		String outputPath = outputField.getText();
 		if(outputPath.lastIndexOf(File.separator) != outputPath.length()) {
 			outputPath += File.separator;
 		}
-		cfg.setOutputPath(outputPath);
+		appCtx.setOutputPath(outputPath);
 		CommonData cd = new CommonData();
 		cd.setDefaultComment(commentField.getText());
 		cd.setAuthor(authorField.getText());
 		cd.setVersion(versionField.getText());
 		cd.setPackageName(packageField.getText());
-		cfg.setCommonData(cd);
-		DatabaseWorker dw = new DatabaseWorker();
-		dw.execute();
+		appCtx.setCommonData(cd);
+		
+		GenerateTaskWorker worker = new GenerateTaskWorker(new JavaBeanGenerator(), outputArea);
+		worker.execute();
 	}
 
 	@Override
@@ -147,34 +145,6 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		authorField.setText("");
 		versionField.setText("");
 		outputArea.setText("");
-	}
-	
-	private class DatabaseWorker extends SwingWorker<Void, String> implements GeneratorProcessListener {
-
-		@Override
-		protected Void doInBackground() throws Exception {
-			AbstractGenerator gen = new JavaBeanGenerator();
-			gen.addGeneratorProcessListener(this);
-			gen.generate();
-			return null;
-		}
-		
-		@Override
-		protected void process(List<String> outputList) {
-			for(String output: outputList) {
-				if (isCancelled()) {
-					break;
-				}
-				String oldText = outputArea.getText();
-				outputArea.setText(oldText + output);
-			}
-		}
-
-		@Override
-		public void generatorProcess(GeneratorProcessEvent e) {
-			publish(e.getMessage());
-		}
-
 	}
 
 }

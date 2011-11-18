@@ -34,6 +34,8 @@ import org.galaxyworld.beangenerator.util.ResourceUtils;
  */
 public class AppContext {
 	
+	private String inputPath;
+	
 	private String outputPath;
 	
 	private String appPath;
@@ -126,6 +128,24 @@ public class AppContext {
 	 */
 	public void setCommonData(CommonData commonData) {
 		this.commonData = commonData;
+	}
+	
+	/**
+	 * Gets input directory path.
+	 * 
+	 * @return input directory path
+	 */
+	public String getInputPath() {
+		return inputPath;
+	}
+
+	/**
+	 * Sets input directory path.
+	 * 
+	 * @param inputPath input directory path
+	 */
+	public void setInputPath(String inputPath) {
+		this.inputPath = inputPath;
 	}
 
 	private static class AppContextInstance {

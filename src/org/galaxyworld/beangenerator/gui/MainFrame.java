@@ -32,6 +32,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import org.galaxyworld.beangenerator.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,8 @@ public class MainFrame extends JFrame {
 		content.add(new ButtonPane(this), BorderLayout.NORTH);
 		
 		JTabbedPane tabPane = new JTabbedPane();
-		tabPane.add("D2J", new D2JGeneratePane());
+		tabPane.add(ResourceUtils.tr("mainwindow.tab.d2j"), new D2JGeneratePane());
+		tabPane.add(ResourceUtils.tr("mainwindow.tab.j2a"), new J2AGeneratePane());
 		content.add(tabPane, BorderLayout.CENTER);
 		
 		content.add(new ControlPane(tabPane), BorderLayout.SOUTH);
