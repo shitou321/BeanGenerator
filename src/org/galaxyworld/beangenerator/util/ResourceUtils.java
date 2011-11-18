@@ -25,9 +25,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+import org.galaxyworld.beangenerator.core.AppContext;
 
 /**
  * Resource utilities.
@@ -104,6 +114,37 @@ public final class ResourceUtils {
 		URLClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 		Class<?> cls = classLoader.loadClass(className);
 		return (T)cls.newInstance();
+	}
+	
+	public static final void compile() {
+		getFiles(AppContext.getInstance().getInputPath());
+	}
+	
+	private static final void getFiles(String path) {
+		File dir = new File(path);
+		File[] files = dir.listFiles();
+		List<String> compilationFileNames = new ArrayList<String>();
+		for(File file : files) {
+			if(file.isFile()) {
+				String fileName = file.getName().toLowerCase();
+				if(fileName.endsWith(".java")) {
+					compilationFileNames.add(file.getAbsolutePath());
+				}
+            } else if(file.isDirectory()) {
+            	getFiles(file.getPath());
+            }
+        }
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+		Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromStrings(compilationFileNames);
+		// int results = compiler.run(null, null, null, file.getAbsolutePath());
+		// System.out.println("Result code: " + results);
+		Iterable<String> options = Arrays.asList("-d", "d:\\");
+		JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, options, null, compilationUnits);
+		Boolean result = task.call();
+		if( result == true ) {
+			System.out.println("Succeeded");
+		}
 	}
 	
 }
