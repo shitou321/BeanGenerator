@@ -19,6 +19,9 @@
 
 package org.galaxyworld.beangenerator.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * ActionScript 3 bean code generator.
  * 
@@ -26,6 +29,8 @@ package org.galaxyworld.beangenerator.core;
  * @version 0.0.1
  */
 public class AS3BeanGenerator extends AbstractGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AS3BeanGenerator.class);
 
 	@Override
 	public void generate() throws Exception {
