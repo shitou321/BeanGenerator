@@ -79,7 +79,7 @@ public class MainFrame extends JFrame {
 	            MainFrame frame = new MainFrame();
 	            SwingUtilities.updateComponentTreeUI(frame);
 	            frame.setIconImage(new ImageIcon("res/bean.png").getImage());
-	            initGobalFont(new Font("Dialog",Font.PLAIN,12));
+	            initGobalFont(new Font("Dialog", Font.PLAIN, 13));
 	    		frame.setVisible(true);
 	        }
 	        

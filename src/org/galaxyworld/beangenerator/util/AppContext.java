@@ -17,13 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.galaxyworld.beangenerator.core;
+package org.galaxyworld.beangenerator.util;
 
 import java.io.File;
-
-import org.galaxyworld.beangenerator.data.CommonData;
-import org.galaxyworld.beangenerator.util.Constants;
-import org.galaxyworld.beangenerator.util.ResourceUtils;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration properties for BeanGenerator. Singleton.
@@ -44,7 +42,7 @@ public class AppContext {
 	
 	private String configFilePath;
 	
-	private CommonData commonData;
+	private Map<String, String> commonData;
 	
 	/**
 	 * Gets the only instance.
@@ -64,6 +62,7 @@ public class AppContext {
 		sb.append(File.separator);
 		sb.append(Constants.CONFIG_FILE);
 		configFilePath = sb.toString();
+		commonData = new HashMap<String, String>();
 	}
 	
 	/**
@@ -113,21 +112,44 @@ public class AppContext {
 	}
 
 	/**
-	 * Gets common data.
+	 * Add common data as following:
+	 * <ul>
+	 * 	<li><code>Constants.PACKAGE_NAME</code>: package name</li>
+	 * 	<li><code>Constants.DEFAULT_COMMENT</code>: default comment</li>
+	 * 	<li><code>Constants.DOC_AUTHOR</code>: author for @author</li>
+	 * 	<li><code>Constants.DOC_VERSION</code>: version for @version</li>
+	 * </ul>
 	 * 
-	 * @return common data
+	 * @param key key for common data
+	 * @param value value of this key
 	 */
-	public CommonData getCommonData() {
-		return commonData;
+	public void addCommonData(String key, String value) {
+		commonData.put(key, value);
 	}
-
+	
 	/**
-	 * Sets common data.
+	 * Gets common data for keys:
+	 * <ul>
+	 * 	<li><code>Constants.PACKAGE_NAME</code>: package name</li>
+	 * 	<li><code>Constants.DEFAULT_COMMENT</code>: default comment</li>
+	 * 	<li><code>Constants.DOC_AUTHOR</code>: author for @author</li>
+	 * 	<li><code>Constants.DOC_VERSION</code>: version for @version</li>
+	 * </ul>
 	 * 
-	 * @param commonData new common data
+	 * @param key to get
+	 * @return value for this key
 	 */
-	public void setCommonData(CommonData commonData) {
-		this.commonData = commonData;
+	public String getCommonDataValue(String key) {
+		return commonData.get(key);
+	}
+	
+	/**
+	 * Gets common data as a map.
+	 * 
+	 * @return common data map
+	 */
+	public Map<String, String> getCommonDataMap() {
+		return commonData;
 	}
 	
 	/**

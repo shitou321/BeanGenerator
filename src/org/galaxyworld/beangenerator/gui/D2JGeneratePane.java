@@ -30,13 +30,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.galaxyworld.beangenerator.core.AppContext;
-import org.galaxyworld.beangenerator.core.GenerateTaskWorker;
-import org.galaxyworld.beangenerator.core.JavaBeanGenerator;
-import org.galaxyworld.beangenerator.data.CommonData;
+import org.galaxyworld.beangenerator.generator.JavaBeanGenerator;
+import org.galaxyworld.beangenerator.util.AppContext;
+import org.galaxyworld.beangenerator.util.Constants;
 import org.galaxyworld.beangenerator.util.ResourceUtils;
 
 import net.miginfocom.swing.MigLayout;
@@ -66,7 +64,7 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 	private final JTextField versionField = new JTextField();
 	
 	// application log output
-	private final JTextArea outputArea = new JTextArea(20, 10);
+	private final LogPane logPane = new LogPane();
 	
 	public D2JGeneratePane() {
 		MigLayout layout = new MigLayout("fillx, wrap", "[align right]rel[grow, fill]rel[pref]", "[]rel[]rel[]rel[]rel[]rel[grow, fill]");
@@ -112,8 +110,7 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		add(versionField, "span 2");
 		
 		add(new JLabel(ResourceUtils.tr("d2j.logs.label")), "gapright 6");
-		final JScrollPane outputScrollPane = new JScrollPane(outputArea);
-		outputArea.setEditable(false);
+		final JScrollPane outputScrollPane = new JScrollPane(logPane);
 		add(outputScrollPane, "span 2");
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -121,20 +118,19 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 	
 	@Override
 	public void generate() {
-		AppContext appCtx = AppContext.getInstance();
+		AppContext ctx = AppContext.getInstance();
 		String outputPath = outputField.getText();
 		if(outputPath.lastIndexOf(File.separator) != outputPath.length()) {
 			outputPath += File.separator;
 		}
-		appCtx.setOutputPath(outputPath);
-		CommonData cd = new CommonData();
-		cd.setDefaultComment(commentField.getText());
-		cd.setAuthor(authorField.getText());
-		cd.setVersion(versionField.getText());
-		cd.setPackageName(packageField.getText());
-		appCtx.setCommonData(cd);
+		ctx.setOutputPath(outputPath);
 		
-		GenerateTaskWorker worker = new GenerateTaskWorker(new JavaBeanGenerator(), outputArea);
+		ctx.addCommonData(Constants.PACKAGE_NAME, packageField.getText());
+		ctx.addCommonData(Constants.DEFAULT_COMMENT, commentField.getText());
+		ctx.addCommonData(Constants.DOC_AUTHOR, authorField.getText());
+		ctx.addCommonData(Constants.DOC_VERSION, versionField.getText());
+		
+		GenerateTaskWorker worker = new GenerateTaskWorker(new JavaBeanGenerator(), logPane);
 		worker.execute();
 	}
 
@@ -144,7 +140,7 @@ public class D2JGeneratePane extends JPanel implements GenerateAction {
 		commentField.setText("");
 		authorField.setText("");
 		versionField.setText("");
-		outputArea.setText("");
+		logPane.setText("");
 	}
 
 }

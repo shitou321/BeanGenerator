@@ -17,25 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.galaxyworld.beangenerator.core;
-
-import java.util.EventListener;
-
-import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+package org.galaxyworld.beangenerator.util;
 
 /**
- * Generator process listener.
+ * Application exception.
  * 
  * @author devbean
  * @version 0.0.1
  */
-public interface GeneratorProcessListener extends EventListener {
+public class AppException extends Exception {
+
+	private static final long serialVersionUID = 6156483906590946405L;
 
 	/**
-	 * Generator process.
-	 * 
-	 * @param e event
+	 * Failed create database connection.
 	 */
-	public void generatorProcess(GeneratorProcessEvent e);
+	public static final String FAILED_CREATE_CONNECTION = "Failed to create database connection.";
+	
+	/**
+	 * Failed create package path.
+	 */
+	public static final String FAILED_CREATE_PACKAGE_DIR = "Failed to create package directory structure.";
+	
+	private String message;
+	
+	public AppException(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	
 }

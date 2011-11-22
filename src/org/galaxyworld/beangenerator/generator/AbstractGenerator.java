@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.galaxyworld.beangenerator.core;
+package org.galaxyworld.beangenerator.generator;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+import org.galaxyworld.beangenerator.gui.GeneratorProcessListener;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;

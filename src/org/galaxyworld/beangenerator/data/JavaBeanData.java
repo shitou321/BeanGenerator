@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Data for JavaBean.
+ * Data for JavaBean. <i>This is not used for generating source file directly.</i>
  * 
  * @author devbean
  * @version 0.0.1

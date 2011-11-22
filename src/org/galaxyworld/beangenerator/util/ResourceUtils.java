@@ -106,4 +106,14 @@ public final class ResourceUtils {
 		return (T)cls.newInstance();
 	}
 	
+	/**
+	 * Checks if the file with given name is a <i>class</i> file.
+	 * 
+	 * @param name given file name
+	 * @return true if the file with given name is a <i>class</i> file
+	 */
+	public static final boolean isClassFile(String name) {
+		return name.toLowerCase().endsWith(".class");
+	}
+	
 }

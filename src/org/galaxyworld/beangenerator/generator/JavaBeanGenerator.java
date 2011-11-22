@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.galaxyworld.beangenerator.core;
+package org.galaxyworld.beangenerator.generator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,11 +37,12 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.galaxyworld.beangenerator.data.CommonData;
 import org.galaxyworld.beangenerator.data.FieldData;
 import org.galaxyworld.beangenerator.data.JavaBeanData;
 import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
 import org.galaxyworld.beangenerator.event.GeneratorProcessEvent.Phase;
+import org.galaxyworld.beangenerator.util.AppContext;
+import org.galaxyworld.beangenerator.util.AppException;
 import org.galaxyworld.beangenerator.util.BeanMapUtils;
 import org.galaxyworld.beangenerator.util.Constants;
 import org.galaxyworld.beangenerator.util.ResourceUtils;
@@ -70,8 +71,8 @@ public class JavaBeanGenerator extends AbstractGenerator {
 	 * @throws AppException if any problem
 	 */
 	private String createPackageFolders() throws AppException {
-		CommonData cd = AppContext.getInstance().getCommonData();
-		String pn = cd.getPackageName();
+		AppContext ctx = AppContext.getInstance();
+		String pn = ctx.getCommonDataValue(Constants.PACKAGE_NAME);
 		try {
 			String outputFilePath = AppContext.getInstance().getOutputPath();
 			outputFilePath = outputFilePath + pn.replace(".", File.separator);
@@ -101,7 +102,7 @@ public class JavaBeanGenerator extends AbstractGenerator {
 				String path =  sb.toString();
 		        Writer out = new OutputStreamWriter(new FileOutputStream(new File(path)));
 		        Map<String, Object> root = BeanMapUtils.toMap(data);
-		        root.putAll(BeanMapUtils.toMap(AppContext.getInstance().getCommonData()));
+		        root.putAll(AppContext.getInstance().getCommonDataMap());
 		        temp.process(root, out);
 		        out.flush();
 		        logger.info("Success! Location: " + path + "; data: " + root);

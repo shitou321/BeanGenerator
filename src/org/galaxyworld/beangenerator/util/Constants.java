@@ -64,4 +64,12 @@ public final class Constants {
 	 */
 	public static final String PROP_PASSWORD = "password";
 	
+	public static final String PACKAGE_NAME = "packageName";
+	
+	public static final String DEFAULT_COMMENT = "defaultComment";
+	
+	public static final String DOC_AUTHOR = "author";
+	
+	public static final String DOC_VERSION = "version";
+	
 }

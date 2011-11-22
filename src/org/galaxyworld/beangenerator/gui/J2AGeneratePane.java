@@ -31,12 +31,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.galaxyworld.beangenerator.core.AS3BeanGenerator;
-import org.galaxyworld.beangenerator.core.AppContext;
-import org.galaxyworld.beangenerator.core.GenerateTaskWorker;
+import org.galaxyworld.beangenerator.generator.AS3BeanGenerator;
+import org.galaxyworld.beangenerator.util.AppContext;
 import org.galaxyworld.beangenerator.util.ResourceUtils;
 
 import net.miginfocom.swing.MigLayout;
@@ -60,7 +58,7 @@ public class J2AGeneratePane extends JPanel implements GenerateAction {
 	private final JCheckBox bindableBox = new JCheckBox("Bindable");
 	
 	// application log output
-	private final JTextArea outputArea = new JTextArea(20, 10);
+	private final LogPane logPane = new LogPane();
 	
 	public J2AGeneratePane() {
 		MigLayout layout = new MigLayout("fillx, wrap", "[align right]rel[grow, fill]rel[pref]", "[]rel[]rel[]rel[grow, fill]");
@@ -117,8 +115,7 @@ public class J2AGeneratePane extends JPanel implements GenerateAction {
 		add(bindableBox, "wrap");
 		
 		add(new JLabel(ResourceUtils.tr("j2a.logs.label")), "gapright 6");
-		final JScrollPane outputScrollPane = new JScrollPane(outputArea);
-		outputArea.setEditable(false);
+		final JScrollPane outputScrollPane = new JScrollPane(logPane);
 		add(outputScrollPane, "span 2");
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -126,25 +123,25 @@ public class J2AGeneratePane extends JPanel implements GenerateAction {
 
 	@Override
 	public void generate() {
-		AppContext appCtx = AppContext.getInstance();
+		AppContext ctx = AppContext.getInstance();
 		String inputPath = inputField.getText();
 		if(inputPath.lastIndexOf(File.separator) != inputPath.length()) {
 			inputPath += File.separator;
 		}
-		appCtx.setInputPath(inputPath);
+		ctx.setInputPath(inputPath);
 		String outputPath = outputField.getText();
 		if(outputPath.lastIndexOf(File.separator) != outputPath.length()) {
 			outputPath += File.separator;
 		}
-		appCtx.setOutputPath(outputPath);
+		ctx.setOutputPath(outputPath);
 		
-		GenerateTaskWorker worker = new GenerateTaskWorker(new AS3BeanGenerator(), outputArea);
+		GenerateTaskWorker worker = new GenerateTaskWorker(new AS3BeanGenerator(), logPane);
 		worker.execute();
 	}
 
 	@Override
 	public void reset() {
-		outputArea.setText("");
+		logPane.setText("");
 	}
 
 }
