@@ -22,7 +22,10 @@ package org.galaxyworld.beangenerator.generator;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent;
+import org.galaxyworld.beangenerator.event.GeneratorProcessEvent.Phase;
 import org.galaxyworld.beangenerator.util.AppContext;
+import org.galaxyworld.beangenerator.util.AppException;
 import org.galaxyworld.beangenerator.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,18 +53,31 @@ public class AS3BeanGenerator extends AbstractGenerator {
 			for (File file : javaFiles) {
 				if (file.isDirectory()) {
 					File outputFile = new File(outputDir, file.getName());
-					outputFile.mkdir();
+					FileUtils.forceMkdir(outputFile);
 					java2AS3(file, outputFile);
 				} else {
 					String fileName = file.getName();
 					if (ResourceUtils.isClassFile(fileName)) {
 						File asFile = new File(outputDir, fileName.replace(".class", ".as"));
+						fireGeneratorProcessEvent(new GeneratorProcessEvent(Phase.ItemStarting,
+								"Starting process " + asFile.getAbsolutePath(), this));
 						asFile.createNewFile();
-//						outputAS3File(asFile, file);
+						outputAS3File(asFile, file);
 					}
 				}
 			}
+		} else {
+			logger.warn("No any file in source directory.");
+			AppException ex = new AppException("No any file in source directory.");
+			throw ex;
 		}
+	}
+	
+	private void outputAS3File(File asFile, File javaFile) {
+		// get full class name
+		String javaFilePath = javaFile.getAbsolutePath();
+		String className = javaFilePath.substring(AppContext.getInstance().getInputPath().length()).replace(File.separator, ".");
+		System.out.println(className.substring(0, className.length() - 6));
 	}
 
 }

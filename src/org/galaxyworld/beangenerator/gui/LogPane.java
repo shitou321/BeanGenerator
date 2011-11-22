@@ -22,6 +22,7 @@ package org.galaxyworld.beangenerator.gui;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -40,6 +41,7 @@ public class LogPane extends JLabel {
 		setBackground(Color.WHITE);
 		setFont(new Font("Dialog", Font.PLAIN, 13));
 		setText("<html>");
+		setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
 	}
 	
 	/**
